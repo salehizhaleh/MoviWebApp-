@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ user.name }} - Movies{% endblock %}
+
+{% block content %}
+<h1>{{ user.name }}'s Movies</h1>
+
+<a href="{{ url_for('index') }}" class="btn btn-back">Back to Users</a>
+
+<hr>
+
+{% if movies %}
+<ul class="movie-list">
+    {% for movie in movies %}
+    <li class="movie-entry">
+        <div class="movie-item">
+            {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.name }}" class="movie-poster">
+            {% endif %}
+            <div class="movie-info">
+                <h3>{{ movie.name }}</h3>
+                <p><strong>Director:</strong> {{ movie.director }}</p>
+                <p><strong>Year:</strong> {{ movie.year }}</p>
+            </div>
+            <div class="movie-actions">
+                <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" method="post" class="inline-form">
+                    <input type="text" name="title" placeholder="New title" required>
+                    <button type="submit" class="btn btn-update">Update</button>
+                </form>
+                <form action="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-delete">Delete</button>
+                </form>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No movies yet!</p>
+{% endif %}
+
+<hr>
+
+<h2>Add New Movie</h2>
+<form action="{{ url_for('add_movie_to_user', user_id=user.id) }}" method="post" class="form">
+    <input
+        type="text"
+        name="movie_title"
+        placeholder="Enter movie title"
+        required
+    >
+    <button type="submit" class="btn">Search and Add</button>
+</form>
+
+{% endblock %}
